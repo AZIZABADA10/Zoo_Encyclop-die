@@ -6,7 +6,7 @@ CREATE TABLE habitats (
     id int primary key AUTO_INCREMENT,
     nom_habitat varchar(250),
     description_habitat varchar(250)
-)
+;)
 
 CREATE TABLE animal (
     id int primary key AUTO_INCREMENT,
@@ -15,4 +15,6 @@ CREATE TABLE animal (
     image_animal varchar(250),
     id_habitat int,
     FOREIGN KEY (id_habitat) REFERENCES habitats(id)
+    on delete cascade
+    on update cascade
 );
