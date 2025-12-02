@@ -18,3 +18,20 @@ CREATE TABLE animal (
     on delete cascade
     on update cascade
 );
+
+
+/* Insertion d'habitats */
+INSERT INTO habitats (nom_habitat, description_habitat) VALUES
+('Savane', 'Grande plaine herbeuse avec quelques arbres'),
+('Jungle', 'Forêt tropicale dense et humide'),
+('Océan', 'Milieu marin avec de leau salée'),
+('Désert', 'Terre aride et sèche avec peu de végétation');
+
+/* Insertion d'animaux */
+INSERT INTO animal (nom, type_alimentaire, image_animal, id_habitat) VALUES
+('Lion', 'Carnivore', 'lion.jpg', 1),
+('Éléphant', 'Herbivore', 'elephant.jpg', 1),
+('Singe', 'Omnivore', 'singe.jpg', 2),
+('Tigre', 'Carnivore', 'tigre.jpg', 2),
+('Dauphin', 'Carnivore', 'dauphin.jpg', 3),
+('Chameau', 'Herbivore', 'chameau.jpg', 4);
