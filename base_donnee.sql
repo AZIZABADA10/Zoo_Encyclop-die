@@ -1,6 +1,7 @@
 /*creation du base de donnée*/
 CREATE database zoo;
 use zoo;
+
 /*la creation des tables sur la base de donnée*/
 CREATE TABLE habitats (
     id int primary key AUTO_INCREMENT,
