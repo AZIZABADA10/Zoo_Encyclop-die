@@ -1,3 +1,7 @@
+<?php
+require_once 'config/connexion';
+
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -6,81 +10,7 @@
     <title>Zoo Kids - Gestion des Animaux</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-30px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        .float-animation {
-            animation: float 3s ease-in-out infinite;
-        }
-        .slide-in {
-            animation: slideIn 0.6s ease-out;
-        }
-        .fade-in {
-            animation: fadeIn 0.8s ease-out;
-        }
-        .card-hover {
-            transition: all 0.3s ease;
-        }
-        .card-hover:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-        }
-        .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        .gradient-savane {
-            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
-        }
-        .gradient-jungle {
-            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
-        }
-        .gradient-desert {
-            background: linear-gradient(135deg, #f09819 0%, #edde5d 100%);
-        }
-        .gradient-ocean {
-            background: linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%);
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 1000;
-            animation: fadeIn 0.3s ease;
-        }
-        .modal.active {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
-            animation: slideIn 0.4s ease;
-        }
-        .btn-primary {
-            transition: all 0.3s ease;
-        }
-        .btn-primary:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-        }
-    </style>
+    <link rel="stylesheet" href="assets/style/styles.css">
 </head>
 <body class="bg-gradient-to-br from-purple-50 to-blue-50 min-h-screen">
     
