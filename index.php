@@ -101,6 +101,47 @@
             </div>
         </div>
     </header>
+    
+
+        <!-- Statistics Section -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 m-4">
+            <div class="bg-gradient-to-br from-pink-400 to-purple-500 rounded-2xl p-6 text-white shadow-xl card-hover">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-pink-100 text-sm">Total Animaux</p>
+                        <h3 class="text-4xl font-bold" id="totalAnimals">0</h3>
+                    </div>
+                    <i class="fas fa-dragon text-5xl opacity-50"></i>
+                </div>
+            </div>
+            <div class="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl p-6 text-white shadow-xl card-hover">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-yellow-100 text-sm">Carnivores</p>
+                        <h3 class="text-4xl font-bold" id="totalCarnivores">0</h3>
+                    </div>
+                    <i class="fas fa-drumstick-bite text-5xl opacity-50"></i>
+                </div>
+            </div>
+            <div class="bg-gradient-to-br from-green-400 to-teal-500 rounded-2xl p-6 text-white shadow-xl card-hover">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-green-100 text-sm">Herbivores</p>
+                        <h3 class="text-4xl font-bold" id="totalHerbivores">0</h3>
+                    </div>
+                    <i class="fas fa-leaf text-5xl opacity-50"></i>
+                </div>
+            </div>
+            <div class="bg-gradient-to-br from-blue-400 to-indigo-500 rounded-2xl p-6 text-white shadow-xl card-hover">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-blue-100 text-sm">Omnivores</p>
+                        <h3 class="text-4xl font-bold" id="totalOmnivores">0</h3>
+                    </div>
+                    <i class="fas fa-balance-scale text-5xl opacity-50"></i>
+                </div>
+            </div>
+        </div>
 
     <!-- Filters Section -->
     <div class="container mx-auto px-4 py-8 fade-in">
@@ -139,45 +180,7 @@
             </div>
         </div>
 
-        <!-- Statistics Section -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div class="bg-gradient-to-br from-pink-400 to-purple-500 rounded-2xl p-6 text-white shadow-xl card-hover">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-pink-100 text-sm">Total Animaux</p>
-                        <h3 class="text-4xl font-bold" id="totalAnimals">0</h3>
-                    </div>
-                    <i class="fas fa-dragon text-5xl opacity-50"></i>
-                </div>
-            </div>
-            <div class="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl p-6 text-white shadow-xl card-hover">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-yellow-100 text-sm">Carnivores</p>
-                        <h3 class="text-4xl font-bold" id="totalCarnivores">0</h3>
-                    </div>
-                    <i class="fas fa-drumstick-bite text-5xl opacity-50"></i>
-                </div>
-            </div>
-            <div class="bg-gradient-to-br from-green-400 to-teal-500 rounded-2xl p-6 text-white shadow-xl card-hover">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-green-100 text-sm">Herbivores</p>
-                        <h3 class="text-4xl font-bold" id="totalHerbivores">0</h3>
-                    </div>
-                    <i class="fas fa-leaf text-5xl opacity-50"></i>
-                </div>
-            </div>
-            <div class="bg-gradient-to-br from-blue-400 to-indigo-500 rounded-2xl p-6 text-white shadow-xl card-hover">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-blue-100 text-sm">Omnivores</p>
-                        <h3 class="text-4xl font-bold" id="totalOmnivores">0</h3>
-                    </div>
-                    <i class="fas fa-balance-scale text-5xl opacity-50"></i>
-                </div>
-            </div>
-        </div>
+        
 
         <!-- Animals Grid -->
         <div id="animalsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
