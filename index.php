@@ -1,6 +1,6 @@
 <?php
-require_once 'config/connexion';
-
+require_once 'config/connexion.php';
+require_once 'actions/ajouter_animal.php';
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -88,12 +88,12 @@ require_once 'config/connexion';
                     <label class="block text-gray-700 font-semibold mb-2">
                         <i class="fas fa-tree mr-2"></i>Habitat
                     </label>
-                    <select id="habitatFilter" class="w-full px-4 py-3 border-2 border-purple-200 rounded-xl focus:border-purple-500 focus:outline-none transition">
-                        <option value="">Tous les habitats</option>
-                        <option value="savane">Savane</option>
-                        <option value="jungle">Jungle</option>
-                        <option value="desert">Désert</option>
-                        <option value="ocean">Océan</option>
+                    <select id="habitatFilter" required name="habitat" class="w-full px-4 py-3 border-2 border-purple-200 rounded-xl focus:border-purple-500 focus:outline-none transition">
+                        <option value="" disabled selected>Tous les habitats</option>
+                        <option value="1">Savane</option>
+                        <option value="2">Jungle</option>
+                        <option value="4">Désert</option>
+                        <option value="3">Océan</option>
                     </select>
                 </div>
                 <div class="flex-1 min-w-[200px]">
@@ -133,7 +133,7 @@ require_once 'config/connexion';
             
             <form id="animalForm" method="POST" enctype="multipart/form-data">
                 <input type="hidden" id="animalId" name="id">
-                
+    
                 <div class="mb-4">
                     <label class="block text-gray-700 font-semibold mb-2">
                         <i class="fas fa-tag mr-2"></i>Nom de l'animal
@@ -162,11 +162,11 @@ require_once 'config/connexion';
                     </label>
                     <select name="habitat" id="animalHabitat" required 
                             class="w-full px-4 py-3 border-2 border-purple-200 rounded-xl focus:border-purple-500 focus:outline-none transition">
-                        <option value="">Sélectionner...</option>
-                        <option value="savane">🦁 Savane</option>
-                        <option value="jungle">🌴 Jungle</option>
-                        <option value="desert">🏜️ Désert</option>
-                        <option value="ocean">🌊 Océan</option>
+                        <option value="" disabled selected >Sélectionner...</option>
+                        <option value="1">🦁 Savane</option>
+                        <option value="2">🌴 Jungle</option>
+                        <option value="4">🏜️ Désert</option>
+                        <option value="3">🌊 Océan</option>
                     </select>
                 </div>
 
