@@ -1,40 +1,10 @@
 <?php
 require_once 'config/connexion.php';
 require_once 'actions/ajouter_animal.php';
+require_once 'actions/statistiques.php';
 
 /** Récuperation des donnée des animaux */
 $animaux = $connexion -> query("select *,nom_habitat from animal a,habitats h where a.id_habitat = h.id;");
-/**Calcule de statistique des animaux */
-$total_animaux = $connexion -> query("select count(*) as total from animal;");
-$res = $total_animaux -> fetch_assoc();
-
-/** total des carnivors */
-$total_animaux_carnivores = $connexion -> query(
-    "SELECT COUNT(*) as total_animaux_carnivors FROM animal 
-     GROUP BY type_alimentaire 
-     HAVING type_alimentaire = 'carnivore';");
-$res_carnivors = $total_animaux_carnivores -> fetch_assoc();
-
-/** total des Herbivores */
-$total_animaux_herbivores = $connexion -> query(
-    "SELECT count(*) as total_animaux_herbivores 
-     from animal 
-     group by type_alimentaire 
-     having  type_alimentaire = 'herbivore';
-");
-$res_herbivors = $total_animaux_herbivores -> fetch_assoc();
-
-
-/** Total animaux Omnivores */
-$total_animaux_omnivores = $connexion -> query(
-    "SELECT count(*) as total_animaux_omnivores 
-    from animal 
-    group by type_alimentaire
-    having type_alimentaire = 'omnivore'
-    "
-);
-
-$res_omnivores = $total_animaux_omnivores -> fetch_assoc();
 
 ?>
 <!DOCTYPE html>
