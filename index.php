@@ -3,7 +3,39 @@ require_once 'config/connexion.php';
 require_once 'actions/ajouter_animal.php';
 
 /** Récuperation des donnée des animaux */
-$animaux = $connexion -> query("select * from animal;");
+$animaux = $connexion -> query("select *,nom_habitat from animal a,habitats h where a.id_habitat = h.id;");
+/**Calcule de statistique des animaux */
+$total_animaux = $connexion -> query("select count(*) as total from animal;");
+$res = $total_animaux -> fetch_assoc();
+
+/** total des carnivors */
+$total_animaux_carnivores = $connexion -> query(
+    "SELECT COUNT(*) as total_animaux_carnivors FROM animal 
+     GROUP BY type_alimentaire 
+     HAVING type_alimentaire = 'carnivore';");
+$res_carnivors = $total_animaux_carnivores -> fetch_assoc();
+
+/** total des Herbivores */
+$total_animaux_herbivores = $connexion -> query(
+    "SELECT count(*) as total_animaux_herbivores 
+     from animal 
+     group by type_alimentaire 
+     having  type_alimentaire = 'herbivore';
+");
+$res_herbivors = $total_animaux_herbivores -> fetch_assoc();
+
+
+/** Total animaux Omnivores */
+$total_animaux_omnivores = $connexion -> query(
+    "SELECT count(*) as total_animaux_omnivores 
+    from animal 
+    group by type_alimentaire
+    having type_alimentaire = 'omnivore'
+    "
+);
+
+$res_omnivores = $total_animaux_omnivores -> fetch_assoc();
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -42,7 +74,7 @@ $animaux = $connexion -> query("select * from animal;");
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-pink-100 text-sm">Total Animaux</p>
-                        <h3 class="text-4xl font-bold" id="totalAnimals">0</h3>
+                        <h3 class="text-4xl font-bold" id="totalAnimals"><?php echo $res['total']; ?></h3>
                     </div>
                     <i class="fas fa-dragon text-5xl opacity-50"></i>
                 </div>
@@ -51,7 +83,7 @@ $animaux = $connexion -> query("select * from animal;");
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-yellow-100 text-sm">Carnivores</p>
-                        <h3 class="text-4xl font-bold" id="totalCarnivores">0</h3>
+                        <h3 class="text-4xl font-bold" id="totalCarnivores"><?php echo $res_carnivors['total_animaux_carnivors']; ?></h3>
                     </div>
                     <i class="fas fa-drumstick-bite text-5xl opacity-50"></i>
                 </div>
@@ -60,7 +92,7 @@ $animaux = $connexion -> query("select * from animal;");
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-green-100 text-sm">Herbivores</p>
-                        <h3 class="text-4xl font-bold" id="totalHerbivores">0</h3>
+                        <h3 class="text-4xl font-bold" id="totalHerbivores"><?php echo $res_herbivors['total_animaux_herbivores']; ?></h3>
                     </div>
                     <i class="fas fa-leaf text-5xl opacity-50"></i>
                 </div>
@@ -69,7 +101,7 @@ $animaux = $connexion -> query("select * from animal;");
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-blue-100 text-sm">Omnivores</p>
-                        <h3 class="text-4xl font-bold" id="totalOmnivores">0</h3>
+                        <h3 class="text-4xl font-bold" id="totalOmnivores"><?php echo $res_omnivores['total_animaux_omnivores'] ?></h3>
                     </div>
                     <i class="fas fa-balance-scale text-5xl opacity-50"></i>
                 </div>
@@ -139,7 +171,7 @@ $animaux = $connexion -> query("select * from animal;");
                     <div class="flex items-center gap-2 mb-4">
                         <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
                             <i class="fas fa-tree mr-1"></i>
-                            <?php echo $animal['id_habitat']; ?>
+                            <?php echo $animal['nom_habitat']; ?>
                         </span>
                     </div>
 
