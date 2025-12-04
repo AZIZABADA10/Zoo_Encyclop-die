@@ -4,7 +4,26 @@ require_once 'actions/ajouter_animal.php';
 require_once 'actions/statistiques.php';
 
 /** Récuperation des donnée des animaux */
-$animaux = $connexion -> query("select *,nom_habitat from animal a,habitats h where a.id_habitat = h.id;");
+
+/** filtrage par nom */
+$chercher_par_nom = isset($_GET['nom_a_chercher']) ? $_GET['nom_a_chercher'] : '';
+$requet_sql = "SELECT a.*, h.nom_habitat 
+               FROM animal a
+               JOIN habitats h ON a.id_habitat = h.id";
+
+if (!empty($chercher_par_nom)) {
+    $requet_sql .= " WHERE a.nom LIKE '%$chercher_par_nom%'";
+}
+
+
+/** filtrage par type alimentaire */
+$filter_par_type_alimentaire= isset($_GET) ;
+
+
+
+
+
+$animaux = $connexion->query($requet_sql);
 
 ?>
 <!DOCTYPE html>
@@ -16,6 +35,7 @@ $animaux = $connexion -> query("select *,nom_habitat from animal a,habitats h wh
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/style/styles.css">
+    <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
 </head>
 <body class="bg-gradient-to-br from-purple-50 to-blue-50 min-h-screen">
     
@@ -83,18 +103,21 @@ $animaux = $connexion -> query("select *,nom_habitat from animal a,habitats h wh
         <div class="bg-white rounded-3xl shadow-xl p-6 mb-8">
             <div class="flex flex-wrap gap-4 items-center justify-between">
                 <div class="flex-1 min-w-[250px]">
+                    <form method="get">
                     <label class="block text-gray-700 font-semibold mb-2">
                         <i class="fas fa-search mr-2"></i>Rechercher
                     </label>
-                    <input type="text" id="searchInput" placeholder="Nom de l'animal..." 
+                    <input type="text" name='nom_a_chercher' id="searchInput" placeholder="Nom de l'animal..." 
                            class="w-full px-4 py-3 border-2 border-purple-200 rounded-xl focus:border-purple-500 focus:outline-none transition">
-                </div>
+                    </div>
+                    <button type="submit" class="mt-8 px-4 py-2 bg-purple-500 text-white rounded-xl">Filtrer</button>
+                    </form>
                 <div class="flex-1 min-w-[200px]">
                     <label class="block text-gray-700 font-semibold mb-2">
                         <i class="fas fa-tree mr-2"></i>Habitat
                     </label>
                     <select id="habitatFilter" required name="habitat" class="w-full px-4 py-3 border-2 border-purple-200 rounded-xl focus:border-purple-500 focus:outline-none transition">
-                        <option value="" >Tous les habitats</option>
+                        <option value="" disabled selected>Tous les habitats</option>
                         <option value="1">Savane</option>
                         <option value="2">Jungle</option>
                         <option value="4">Désert</option>
@@ -105,8 +128,8 @@ $animaux = $connexion -> query("select *,nom_habitat from animal a,habitats h wh
                     <label class="block text-gray-700 font-semibold mb-2">
                         <i class="fas fa-utensils mr-2"></i>Type Alimentaire
                     </label>
-                    <select id="typeFilter" class="w-full px-4 py-3 border-2 border-purple-200 rounded-xl focus:border-purple-500 focus:outline-none transition">
-                        <option value="">Tous les types</option>
+                    <select id="typeFilter" name="filter_par_type_alimentaire" class="w-full px-4 py-3 border-2 border-purple-200 rounded-xl focus:border-purple-500 focus:outline-none transition">
+                        <option value="" disabled selected>Tous les types</option>
                         <option value="carnivore">Carnivore</option>
                         <option value="herbivore">Herbivore</option>
                         <option value="omnivore">Omnivore</option>
