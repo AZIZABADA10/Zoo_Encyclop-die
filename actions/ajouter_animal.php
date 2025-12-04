@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nom'],$_POST['habitat
     $imageName = null;
     if (!empty($_FILES['image']['tmp_name'])) {
         $ext =pathinfo($_FILES['image']['name'],PATHINFO_EXTENSION)  ; 
-        $imageName =uniqid() . '.animal'. $ext ;
+        $imageName =uniqid() . '.'. $ext ;
         move_uploaded_file($_FILES['image']['tmp_name'],'uploads/'.$imageName );
     } 
 

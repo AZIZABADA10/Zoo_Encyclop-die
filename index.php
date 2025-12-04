@@ -1,6 +1,9 @@
 <?php
 require_once 'config/connexion.php';
 require_once 'actions/ajouter_animal.php';
+
+/** Récuperation des donnée des animaux */
+$animaux = $connexion -> query("select * from animal;");
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -89,7 +92,7 @@ require_once 'actions/ajouter_animal.php';
                         <i class="fas fa-tree mr-2"></i>Habitat
                     </label>
                     <select id="habitatFilter" required name="habitat" class="w-full px-4 py-3 border-2 border-purple-200 rounded-xl focus:border-purple-500 focus:outline-none transition">
-                        <option value="" disabled selected>Tous les habitats</option>
+                        <option value="" >Tous les habitats</option>
                         <option value="1">Savane</option>
                         <option value="2">Jungle</option>
                         <option value="4">Désert</option>
@@ -109,14 +112,44 @@ require_once 'actions/ajouter_animal.php';
                 </div>
             </div>
         </div>
-
-        
-
         <!-- Animals Grid -->
         <div id="animalsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            <!-- Animals will be loaded here dynamically via PHP -->
-        </div>
+            <?php while ($animal = $animaux->fetch_assoc()): ?>
+
+            <div class="bg-white rounded-2xl shadow-xl overflow-hidden card-hover slide-in">
+
+                <div class="h-48 flex items-center justify-center">
+                    <img src="uploads/<?php echo $animal['image_animal']; ?>" 
+                        class="h-full w-full object-cover">
+                </div>
+
+                <div class="p-6">
+
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">
+                        <?php echo $animal['nom']; ?>
+                    </h3>
+
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-semibold">
+                            <i class="fas fa-utensils mr-1"></i>
+                            <?php echo $animal['type_alimentaire']; ?>
+                        </span>
+                    </div>
+
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
+                            <i class="fas fa-tree mr-1"></i>
+                            <?php echo $animal['id_habitat']; ?>
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+
+            <?php endwhile; ?>
+            </div>
     </div>
+    
 
     <!-- Modal: Add/Edit Animal -->
     <div id="addAnimalModal" class="modal">
