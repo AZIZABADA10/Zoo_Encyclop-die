@@ -2,6 +2,7 @@
 require_once 'config/connexion.php';
 require_once 'actions/ajouter_animal.php';
 require_once 'actions/statistiques.php';
+require_once 'actions/supprimer_animal.php';
 
 /** Récuperation des donnée des animaux */
 $requet_sql = "SELECT a.*, h.nom_habitat 
@@ -13,13 +14,13 @@ $requet_sql = "SELECT a.*, h.nom_habitat
 /** filtrage par type alimentaire */
 $filter_par_type_alimentaire = isset($_GET['filter_par_type_alimentaire'])? $_GET['filter_par_type_alimentaire']:'';
 if(!empty($filter_par_type_alimentaire)){
-    $requet_sql .= "AND a.type_alimentaire like '%$filter_par_type_alimentaire%'";
+    $requet_sql .= " AND a.type_alimentaire like '%$filter_par_type_alimentaire%'";
 };
 
 /** filtrer par habitats */
 $filter_par_habitat = isset($_GET['filter_par_habitat']) ? $_GET['filter_par_habitat'] : '';
 if (!empty($_GET['filter_par_habitat'])) {
-    $requet_sql .= "AND h.nom_habitat like '%$filter_par_habitat%'";
+    $requet_sql .= " AND h.nom_habitat like '%$filter_par_habitat%'";
 };
 
 $animaux = $connexion->query($requet_sql);
@@ -197,7 +198,7 @@ $animaux = $connexion->query($requet_sql);
 
         <!-- Boutons avec animation glissante -->
         <div class="flex gap-3 mt-6">
-            <button onclick="editAnimal(${animal.id}, '${animal.nom}', '${animal.type_alimentaire}', '${animal.habitat}', '${animal.image}')" 
+            <button  
                     class="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-cyan-500 
                            text-white font-medium py-3 rounded-xl hover:from-blue-600 hover:to-cyan-600 
                            hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 
@@ -206,13 +207,18 @@ $animaux = $connexion->query($requet_sql);
                 <span class="group-hover/btn:translate-x-1 transition-transform duration-300">Modifier</span>
             </button>
             
-            <button onclick="deleteAnimal(${animal.id}, '${animal.nom}')" 
+            <button
                     class="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-red-500 to-rose-500 
                            text-white font-medium py-3 rounded-xl hover:from-red-600 hover:to-rose-600 
                            hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 
                            group/btn">
                 <i class="fas fa-trash group-hover/btn:rotate-12 transition-transform duration-300"></i>
-                <span class="group-hover/btn:translate-x-1 transition-transform duration-300">Supprimer</span>
+                    <span class="group-hover/btn:translate-x-1 transition-transform duration-300">
+                        <a href="actions/supprimer_animal.php?supprimer=<?php echo $animal['id']; ?>" 
+                        onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet animal ?');">
+                        Supprimer
+                        </a>
+                    </span> 
             </button>
         </div>
     </div>
