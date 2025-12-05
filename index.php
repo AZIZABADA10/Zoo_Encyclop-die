@@ -4,12 +4,24 @@ require_once 'actions/ajouter_animal.php';
 require_once 'actions/statistiques.php';
 require_once 'actions/supprimer_animal.php';
 
+
 /** Récuperation des donnée des animaux */
-$requet_sql = "SELECT a.*, h.nom_habitat 
+$requet_sql = "SELECT a.*, h.nom_habitat, h.id AS id_habitat
                FROM animal a
                JOIN habitats h ON a.id_habitat = h.id
                WHERE 1000=1000
                ";
+
+
+
+// Récupération des habitats pour les selects
+$habitats_result = $connexion->query("SELECT * FROM habitats ORDER BY nom_habitat");
+$habitats = [];
+while ($h = $habitats_result->fetch_assoc()) {
+    $habitats[] = $h;
+}
+
+
 
 /** filtrage par type alimentaire */
 $filter_par_type_alimentaire = isset($_GET['filter_par_type_alimentaire'])? $_GET['filter_par_type_alimentaire'] : '';
@@ -38,7 +50,6 @@ $animaux = $connexion->query($requet_sql);
     <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
 </head>
 <body class="bg-gradient-to-br from-purple-50 to-blue-50 min-h-screen">
-    
     <!-- Header -->
         <header class="gradient-bg text-white shadow-2xl">
             <div class="container mx-auto px-4 py-4 md:py-6">
@@ -53,7 +64,8 @@ $animaux = $connexion->query($requet_sql);
                     </div>
 
                     <!-- Bouton responsive -->
-                    <button onclick="openModal('addAnimalModal')" 
+                    <div class="flex gap-4">
+                        <button onclick="openModal('addAnimalModal')" 
                             class="btn-primary bg-gradient-to-r from-yellow-400 to-amber-400 hover:from-yellow-500 hover:to-amber-500 
                                 text-purple-900 font-bold py-2 px-4 md:py-3 md:px-6 rounded-full shadow-lg hover:shadow-xl 
                                 transform hover:-translate-y-1 transition-all duration-300 w-full md:w-auto 
@@ -61,6 +73,14 @@ $animaux = $connexion->query($requet_sql);
                         <i class="fas fa-plus text-sm md:text-base"></i>
                         <span class="text-sm md:text-base">Ajouter un Animal</span>
                     </button>
+                    <button onclick="openModal('habitatModalAdd')" 
+                        class="btn-primary bg-gradient-to-r from-yellow-400 to-amber-400 hover:from-yellow-500 hover:to-amber-500 
+                                text-purple-900 font-bold py-2 px-4 md:py-3 md:px-6 rounded-full shadow-lg hover:shadow-xl 
+                                transform hover:-translate-y-1 transition-all duration-300 w-full md:w-auto 
+                                flex items-center justify-center gap-2">
+                        <i class="fas fa-plus"></i> Nouvel Habitat
+                    </button>
+                    </div>
                 </div>
             </div>
         </header>
@@ -115,19 +135,18 @@ $animaux = $connexion->query($requet_sql);
                     <i class="fas fa-tree mr-2 text-emerald-600"></i>Habitat
                 </label>
                 <select name="filter_par_habitat" class="w-full px-5 py-3.5 border-2 border-purple-300 rounded-2xl 
-                       bg-white text-gray-700 font-medium focus:border-purple-500 focus:ring-4 
-                       focus:ring-purple-200 focus:outline-none transition-all duration-300">
-                    <option value="" class="py-2">Tous les habitats</option>
-                    <option value="Savane" <?= ($_GET['filter_par_habitat'] ?? '') == "Savane" ? "selected":"" ?> 
-                            class="py-2 hover:bg-purple-100">Savane</option>
-                    <option value="Jungle"  <?= ($_GET['filter_par_habitat'] ?? '') == "Jungle" ? "selected" : "" ?> 
-                            class="py-2 hover:bg-purple-100">Jungle</option>
-                    <option value="Désert" <?= ($_GET['filter_par_habitat'] ?? '') == "Désert" ? "selected" : "" ?>
-                            class="py-2 hover:bg-purple-100">Désert</option>
-                    <option value="Océan" <?= ($_GET['filter_par_habitat'] ?? '') == "Océan" ? "selected" : "" ?>
-                            class="py-2 hover:bg-purple-100">Océan</option>
+                    bg-white text-gray-700 font-medium focus:border-purple-500 focus:ring-4 
+                    focus:ring-purple-200 focus:outline-none transition-all duration-300">
+                    <option value="">Tous les habitats</option>
+                    <?php foreach ($habitats as $h): ?>
+                        <option value="<?= $h['nom_habitat'] ?>" 
+                            <?= ($_GET['filter_par_habitat'] ?? '') == $h['nom_habitat'] ? "selected" : "" ?>>
+                            <?= $h['nom_habitat'] ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
             </div>
+
 
             <div class="flex-1 min-w-[250px]">
                 <label class="block text-gray-800 font-bold mb-3 text-lg">
@@ -156,216 +175,219 @@ $animaux = $connexion->query($requet_sql);
         </form>
     </div>
         <!-- Animals Grid -->
+         <h2 class="text-3xl font-bold text-gray-900 mb-6">Nos Animaux</h2> 
         <div id="animalsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            <?php while ($animal = $animaux->fetch_assoc()): ?>
-
+          
+        <?php while ($animal = $animaux->fetch_assoc()): ?>
             <div class="group bg-white rounded-3xl shadow-xl overflow-hidden relative 
-            hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
-    
-    <!-- Image avec effet de zoom et overlay -->
-    <div class="h-48 overflow-hidden relative">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent 
-                    opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
-        <img src="uploads/<?php echo $animal['image_animal']; ?>" 
-             class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-700">
-    </div>
-
-    <!-- Contenu avec animations -->
-    <div class="p-6 relative">
-        <!-- Nom avec effet underline -->
-        <h3 class="text-2xl font-bold text-gray-900 mb-3 relative inline-block 
-                   after:content-[''] after:absolute after:w-0 after:h-1 after:bg-gradient-to-r after:from-purple-500 after:to-blue-500 
-                   after:left-0 after:-bottom-1 after:transition-all after:duration-500 group-hover:after:w-full">
-            <?php echo $animal['nom']; ?>
-        </h3>
-
-        <!-- Badges avec animation de scale -->
-        <div class="flex flex-wrap gap-2 mb-4">
-            <span class="inline-flex items-center gap-1 bg-gradient-to-r from-purple-50 to-white 
-                        text-purple-700 px-4 py-2 rounded-full text-sm font-semibold 
-                        border border-purple-200 shadow-sm hover:scale-105 transition-transform duration-300">
-                <i class="fas fa-utensils text-purple-600"></i>
-                <?php echo $animal['type_alimentaire']; ?>
-            </span>
+                    hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
             
-            <span class="inline-flex items-center gap-1 bg-gradient-to-r from-emerald-50 to-white 
-                        text-emerald-700 px-4 py-2 rounded-full text-sm font-semibold 
-                        border border-emerald-200 shadow-sm hover:scale-105 transition-transform duration-300">
-                <i class="fas fa-tree text-emerald-600"></i>
-                <?php echo $animal['nom_habitat']; ?>
-            </span>
-        </div>
-
-        <!-- Boutons avec animation glissante -->
-        <div class="flex gap-3 mt-6">
-            <button  
-                    class="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-cyan-500 
-                           text-white font-medium py-3 rounded-xl hover:from-blue-600 hover:to-cyan-600 
-                           hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 
-                           group/btn">
-                <i class="fas fa-edit group-hover/btn:rotate-12 transition-transform duration-300"></i>
-                <span class="group-hover/btn:translate-x-1 transition-transform duration-300"><a href="actions/modifier_animal.php?id_a_modifier=<?= $animal['id']; ?>">Modifier</a></span>
-            </button>
-            
-            <button
-                    class="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-red-500 to-rose-500 
-                           text-white font-medium py-3 rounded-xl hover:from-red-600 hover:to-rose-600 
-                           hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 
-                           group/btn">
-                <i class="fas fa-trash group-hover/btn:rotate-12 transition-transform duration-300"></i>
-                    <span class="group-hover/btn:translate-x-1 transition-transform duration-300">
-                        <a href="actions/supprimer_animal.php?supprimer=<?php echo $animal['id']; ?>" 
-                        onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet animal ?');">
-                        Supprimer
-                        </a>
-                    </span> 
-            </button>
-        </div>
-    </div>
-
-    <!-- Effet de bordure animé -->
-    <div class="absolute inset-0 rounded-3xl border-2 border-transparent 
-                group-hover:border-purple-200 transition-all duration-500 pointer-events-none"></div>
-</div>
-
-            <?php endwhile; ?>
+            <!-- Image avec effet de zoom et overlay -->
+            <div class="h-48 overflow-hidden relative">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent 
+                            opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
+                <img src="uploads/<?php echo $animal['image_animal']; ?>" 
+                    class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-700">
             </div>
-    </div>
-    
 
-    <!-- Modal: Add/Edit Animal -->
-    <div id="addAnimalModal" class="modal">
-        <div class="modal-content bg-white rounded-3xl shadow-2xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="text-3xl font-bold text-gray-800">
-                    <i class="fas fa-paw text-purple-500 mr-3"></i>
-                    <span id="modalTitle">Ajouter un Animal</span>
-                </h2>
-                <button onclick="closeModal('addAnimalModal')" class="text-gray-500 hover:text-gray-700 text-2xl">
-                    <i class="fas fa-times"></i>
-                </button>
+            <!-- Contenu avec animations -->
+            <div class="p-6 relative">
+                <!-- Nom avec effet underline -->
+                <h3 class="text-2xl font-bold text-gray-900 mb-3 relative inline-block 
+                        after:content-[''] after:absolute after:w-0 after:h-1 after:bg-gradient-to-r after:from-purple-500 after:to-blue-500 
+                        after:left-0 after:-bottom-1 after:transition-all after:duration-500 group-hover:after:w-full">
+                    <?php echo $animal['nom']; ?>
+                </h3>
+
+                <!-- Badges avec animation de scale -->
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="inline-flex items-center gap-1 bg-gradient-to-r from-purple-50 to-white 
+                                text-purple-700 px-4 py-2 rounded-full text-sm font-semibold 
+                                border border-purple-200 shadow-sm hover:scale-105 transition-transform duration-300">
+                        <i class="fas fa-utensils text-purple-600"></i>
+                        <?php echo $animal['type_alimentaire']; ?>
+                    </span>
+                    
+                    <span class="inline-flex items-center gap-1 bg-gradient-to-r from-emerald-50 to-white 
+                                text-emerald-700 px-4 py-2 rounded-full text-sm font-semibold 
+                                border border-emerald-200 shadow-sm hover:scale-105 transition-transform duration-300">
+                        <i class="fas fa-tree text-emerald-600"></i>
+                        <?php echo $animal['nom_habitat']; ?>
+                    </span>
+                </div>
+
+                <!-- Boutons avec animation glissante -->
+                <div class="flex gap-3 mt-6">
+                    <button  
+                            class="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-cyan-500 
+                                text-white font-medium py-3 rounded-xl hover:from-blue-600 hover:to-cyan-600 
+                                hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 
+                                group/btn">
+                        <i class="fas fa-edit group-hover/btn:rotate-12 transition-transform duration-300"></i>
+                        <span class="group-hover/btn:translate-x-1 transition-transform duration-300"><a href="actions/modifier_animal.php?id_a_modifier=<?= $animal['id']; ?>">Modifier</a></span>
+                    </button>
+                    
+                    <button
+                            class="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-red-500 to-rose-500 
+                                text-white font-medium py-3 rounded-xl hover:from-red-600 hover:to-rose-600 
+                                hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 
+                                group/btn">
+                        <i class="fas fa-trash group-hover/btn:rotate-12 transition-transform duration-300"></i>
+                            <span class="group-hover/btn:translate-x-1 transition-transform duration-300">
+                                <a href="actions/supprimer_animal.php?supprimer=<?php echo $animal['id']; ?>" 
+                                onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet animal ?');">
+                                Supprimer
+                                </a>
+                            </span> 
+                    </button>
+                </div>
             </div>
-            
-            <form id="animalForm" method="POST" enctype="multipart/form-data">
-                <input type="hidden" id="animalId" name="id">
-    
-                <div class="mb-4">
-                    <label class="block text-gray-700 font-semibold mb-2">
-                        <i class="fas fa-tag mr-2"></i>Nom de l'animal
-                    </label>
-                    <input type="text" name="nom" id="animalNom" required 
-                           class="w-full px-4 py-3 border-2 border-purple-200 rounded-xl focus:border-purple-500 focus:outline-none transition"
-                           placeholder="Ex: Lion, Éléphant...">
-                </div>
 
-                <div class="mb-4">
-                    <label class="block text-gray-700 font-semibold mb-2">
-                        <i class="fas fa-utensils mr-2"></i>Type Alimentaire
-                    </label>
-                    <select name="type_alimentaire" id="animalType" required 
-                            class="w-full px-4 py-3 border-2 border-purple-200 rounded-xl focus:border-purple-500 focus:outline-none transition">
-                        <option value="">Sélectionner...</option>
-                        <option value="carnivore">🥩 Carnivore</option>
-                        <option value="herbivore">🌿 Herbivore</option>
-                        <option value="omnivore">🍽️ Omnivore</option>
-                    </select>
+            <!-- Effet de bordure animé -->
+            <div class="absolute inset-0 rounded-3xl border-2 border-transparent 
+                        group-hover:border-purple-200 transition-all duration-500 pointer-events-none"></div>
+        </div>
+                <?php endwhile; ?>
                 </div>
+        </div>
+            <!-- Habitats Grid -->
+            <div class="container mx-auto px-4 py-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-6">Nos Habitats</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <?php foreach ($habitats as $habitat): ?>
+                    <div class="group bg-white rounded-3xl shadow-xl overflow-hidden relative 
+                                hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 p-6">
+                        
+                        <!-- Nom de l'habitat -->
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">
+                            <?= $habitat['nom_habitat']; ?>
+                        </h3>
 
-                <div class="mb-4">
-                    <label class="block text-gray-700 font-semibold mb-2">
-                        <i class="fas fa-tree mr-2"></i>Habitat
-                    </label>
-                    <select name="habitat" id="animalHabitat" required 
-                            class="w-full px-4 py-3 border-2 border-purple-200 rounded-xl focus:border-purple-500 focus:outline-none transition">
-                        <option value="" disabled selected >Sélectionner...</option>
-                        <option value="1">🦁 Savane</option>
-                        <option value="2">🌴 Jungle</option>
-                        <option value="4">🏜️ Désert</option>
-                        <option value="3">🌊 Océan</option>
-                    </select>
-                </div>
+                        <!-- Description -->
+                        <p class="text-gray-700 mb-4"><?= $habitat['description_habitat']; ?></p>
 
-                <div class="mb-6">
-                    <label class="block text-gray-700 font-semibold mb-2">
-                        <i class="fas fa-image mr-2"></i>Image de l'animal
-                    </label>
-                    <div class="border-2 border-dashed border-purple-300 rounded-xl p-6 text-center hover:border-purple-500 transition">
-                        <input type="file" name="image" id="animalImage" accept="image/*" 
-                               class="hidden" onchange="previewImage(event)">
-                        <label for="animalImage" class="cursor-pointer">
-                            <div id="imagePreview" class="mb-4">
-                                <i class="fas fa-cloud-upload-alt text-6xl text-purple-300 mb-2"></i>
-                                <p class="text-gray-600">Cliquez pour télécharger une image</p>
-                            </div>
-                        </label>
+                        <!-- Boutons Modifier / Supprimer -->
+                        <div class="flex gap-3">
+                            <a href="actions/modifier_habitat.php?id=<?= $habitat['id']; ?>" 
+                            class="flex-1 flex items-center justify-center gap-2 bg-blue-500 text-white py-3 rounded-xl hover:bg-blue-600 transition">
+                                <i class="fas fa-edit"></i> Modifier
+                            </a>
+                            <a href="actions/supprimer_habitat.php?supprimer=<?= $habitat['id']; ?>" 
+                            onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet habitat ?');"
+                            class="flex-1 flex items-center justify-center gap-2 bg-red-500 text-white py-3 rounded-xl hover:bg-red-600 transition">
+                                <i class="fas fa-trash"></i> Supprimer
+                            </a>
+                        </div>
                     </div>
+                    <?php endforeach; ?>
                 </div>
+            </div>
+            <!-- Modal: Add/Edit Animal -->
+            <div id="addAnimalModal" class="modal">
+                <div class="modal-content bg-white rounded-3xl shadow-2xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-3xl font-bold text-gray-800">
+                            <i class="fas fa-paw text-purple-500 mr-3"></i>
+                            <span id="modalTitle">Ajouter un Animal</span>
+                        </h2>
+                        <button onclick="closeModal('addAnimalModal')" class="text-gray-500 hover:text-gray-700 text-2xl">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <form id="animalForm" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" id="animalId" name="id">
+            
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-semibold mb-2">
+                                <i class="fas fa-tag mr-2"></i>Nom de l'animal
+                            </label>
+                            <input type="text" name="nom" id="animalNom" required 
+                                class="w-full px-4 py-3 border-2 border-purple-200 rounded-xl focus:border-purple-500 focus:outline-none transition"
+                                placeholder="Ex: Lion, Éléphant...">
+                        </div>
 
-                <div class="flex gap-4">
-                    <button type="submit" class="flex-1 btn-primary bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-bold py-4 rounded-xl shadow-lg">
-                        <i class="fas fa-save mr-2"></i>Enregistrer
-                    </button>
-                    <button type="button" onclick="closeModal('addAnimalModal')" 
-                            class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-4 rounded-xl transition">
-                        <i class="fas fa-times mr-2"></i>Annuler
-                    </button>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-semibold mb-2">
+                                <i class="fas fa-utensils mr-2"></i>Type Alimentaire
+                            </label>
+                            <select name="type_alimentaire" id="animalType" required 
+                                    class="w-full px-4 py-3 border-2 border-purple-200 rounded-xl focus:border-purple-500 focus:outline-none transition">
+                                <option value="">Sélectionner...</option>
+                                <option value="carnivore">🥩 Carnivore</option>
+                                <option value="herbivore">🌿 Herbivore</option>
+                                <option value="omnivore">🍽️ Omnivore</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-semibold mb-2">
+                                <i class="fas fa-tree mr-2"></i>Habitat
+                            </label>
+                            <select name="habitat" id="animalHabitat" required 
+                                    class="w-full px-4 py-3 border-2 border-purple-200 rounded-xl focus:border-purple-500 focus:outline-none transition">
+                                <option value="" disabled selected>Sélectionner...</option>
+                                <?php foreach ($habitats as $h): ?>
+                                    <option value="<?= $h['id'] ?>"><?= $h['nom_habitat'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
+
+                        <div class="mb-6">
+                            <label class="block text-gray-700 font-semibold mb-2">
+                                <i class="fas fa-image mr-2"></i>Image de l'animal
+                            </label>
+                            <div class="border-2 border-dashed border-purple-300 rounded-xl p-6 text-center hover:border-purple-500 transition">
+                                <input type="file" name="image" id="animalImage" accept="image/*" 
+                                    class="hidden" onchange="previewImage(event)">
+                                <label for="animalImage" class="cursor-pointer">
+                                    <div id="imagePreview" class="mb-4">
+                                        <i class="fas fa-cloud-upload-alt text-6xl text-purple-300 mb-2"></i>
+                                        <p class="text-gray-600">Cliquez pour télécharger une image</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4">
+                            <button type="submit" class="flex-1 btn-primary bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-bold py-4 rounded-xl shadow-lg">
+                                <i class="fas fa-save mr-2"></i>Enregistrer
+                            </button>
+                            <button type="button" onclick="closeModal('addAnimalModal')" 
+                                    class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-4 rounded-xl transition">
+                                <i class="fas fa-times mr-2"></i>Annuler
+                            </button>
+                        </div>
+                    </form>
                 </div>
-            </form>
-        </div>
-    </div>
+            </div>
+            <div id="habitatModalAdd" class="modal">
+            <div class="modal-content bg-white p-8 rounded-2xl">
 
-    <!-- Modal: Manage Habitats -->
-    <button onclick="openModal('habitatModal')" 
-            class="fixed bottom-8 right-8 bg-gradient-to-r from-green-500 to-teal-600 text-white p-5 rounded-full shadow-2xl hover:scale-110 transition z-50">
-        <i class="fas fa-tree text-2xl"></i>
-    </button>
-
-    <div id="habitatModal" class="modal">
-        <div class="modal-content bg-white rounded-3xl shadow-2xl p-8 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="text-3xl font-bold text-gray-800">
-                    <i class="fas fa-tree text-green-500 mr-3"></i>Gestion des Habitats
-                </h2>
-                <button onclick="closeModal('habitatModal')" class="text-gray-500 hover:text-gray-700 text-2xl">
+                <h2 class="text-2xl font-bold mb-4">Ajouter un Habitat</h2>
+                <button onclick="closeModal('habitatModalAdd')" class="text-gray-500 text-xl">
                     <i class="fas fa-times"></i>
                 </button>
-            </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="gradient-savane rounded-2xl p-6 text-white shadow-xl">
-                    <h3 class="text-2xl font-bold mb-2">🦁 Savane</h3>
-                    <p class="mb-4">Grandes plaines herbeuses d'Afrique avec des températures chaudes.</p>
-                    <button class="bg-white text-orange-600 px-4 py-2 rounded-lg font-semibold hover:scale-105 transition">
-                        <i class="fas fa-edit mr-2"></i>Modifier
-                    </button>
-                </div>
+                <form method="POST" action="actions/ajouter_habitat.php">
+                    <label>Nom de l'habitat</label>
+                    <input type="text" name="nom_habitat" required class="w-full border p-3 rounded mb-4">
 
-                <div class="gradient-jungle rounded-2xl p-6 text-white shadow-xl">
-                    <h3 class="text-2xl font-bold mb-2">🌴 Jungle</h3>
-                    <p class="mb-4">Forêts tropicales denses et humides avec une végétation luxuriante.</p>
-                    <button class="bg-white text-green-600 px-4 py-2 rounded-lg font-semibold hover:scale-105 transition">
-                        <i class="fas fa-edit mr-2"></i>Modifier
-                    </button>
-                </div>
+                    <label>Description</label>
+                    <textarea name="description_habitat" required class="w-full border p-3 rounded mb-4"></textarea>
 
-                <div class="gradient-desert rounded-2xl p-6 text-white shadow-xl">
-                    <h3 class="text-2xl font-bold mb-2">🏜️ Désert</h3>
-                    <p class="mb-4">Régions arides et sèches avec peu de végétation et températures extrêmes.</p>
-                    <button class="bg-white text-yellow-600 px-4 py-2 rounded-lg font-semibold hover:scale-105 transition">
-                        <i class="fas fa-edit mr-2"></i>Modifier
+                    <button type="submit" name="ajouter_habitat"
+                        class="w-full bg-green-600 text-white py-3 rounded-xl">
+                        Ajouter
                     </button>
-                </div>
+                </form>
 
-                <div class="gradient-ocean rounded-2xl p-6 text-white shadow-xl">
-                    <h3 class="text-2xl font-bold mb-2">🌊 Océan</h3>
-                    <p class="mb-4">Vastes étendues d'eau salée abritant une vie marine diversifiée.</p>
-                    <button class="bg-white text-blue-600 px-4 py-2 rounded-lg font-semibold hover:scale-105 transition">
-                        <i class="fas fa-edit mr-2"></i>Modifier
-                    </button>
-                </div>
             </div>
         </div>
-    </div>
+
+
 <footer class="bg-purple-500 text-white py-10 mt-10 fade-in-up">
     <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
 
