@@ -66,7 +66,7 @@ Il permet de gérer les animaux, leurs habitats, leurs types alimentaires ainsi 
 
 # PHP (CRUD)
 
-- Connexion à la base via **PDO**
+- Connexion à la base via **mysqli**
 - Formulaires d’ajout, modification et suppression
 - Téléchargement & affichage des images
 - Filtres dynamiques (habitat & type alimentaire)
