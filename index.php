@@ -251,39 +251,65 @@ $animaux = $connexion->query($requet_sql);
                 </div>
         </div>
             <!-- Habitats Grid -->
-            <div class="container mx-auto px-4 py-8">
-                <h2 class="text-3xl font-bold text-gray-900 mb-6">Nos Habitats</h2>
+            <div class="container mx-auto px-4 py-12">
+                <div class="mb-12 text-center">
+                    <h2 class="text-5xl font-extrabold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent mb-3">
+                        Nos Habitats
+                    </h2>
+                    <div class="w-24 h-1 bg-gradient-to-r from-emerald-500 to-teal-500 mx-auto rounded-full"></div>
+                </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <?php foreach ($habitats as $habitat): ?>
-                    <div class="group bg-white rounded-3xl shadow-xl overflow-hidden relative 
-                                hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 p-6">
+                    <div class="group relative bg-gradient-to-br from-white to-gray-50 rounded-2xl overflow-hidden 
+                                border border-gray-100 hover:border-emerald-200 transition-all duration-300 
+                                hover:shadow-2xl hover:shadow-emerald-100/50 hover:-translate-y-1">
                         
-                        <!-- Nom de l'habitat -->
-                        <h3 class="text-2xl font-bold text-gray-900 mb-3">
-                            <?= $habitat['nom_habitat']; ?>
-                        </h3>
-
-                        <!-- Description -->
-                        <p class="text-gray-700 mb-4"><?= $habitat['description_habitat']; ?></p>
-
-                        <!-- Boutons Modifier / Supprimer -->
-                        <div class="flex gap-3">
-                            <a href="actions/modifier_habitat.php?id=<?= $habitat['id']; ?>" 
-                            class="flex-1 flex items-center justify-center gap-2 bg-blue-500 text-white py-3 rounded-xl hover:bg-blue-600 transition">
-                                <i class="fas fa-edit"></i> Modifier
-                            </a>
-                            <a href="actions/supprimer_habitat.php?supprimer=<?= $habitat['id']; ?>" 
-                            onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet habitat ?');"
-                            class="flex-1 flex items-center justify-center gap-2 bg-red-500 text-white py-3 rounded-xl hover:bg-red-600 transition">
-                                <i class="fas fa-trash"></i> Supprimer
-                            </a>
+                        <!-- Accent décoratif -->
+                        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500"></div>
+                        
+                        <div class="p-6">
+                            <!-- Nom de l'habitat -->
+                            <div class="mb-4">
+                                <h3 class="text-2xl font-bold text-gray-900 mb-2 group-hover:text-emerald-600 transition-colors duration-300">
+                                    <?= $habitat['nom_habitat']; ?>
+                                </h3>
+                                <div class="w-12 h-0.5 bg-gradient-to-r from-emerald-400 to-transparent rounded-full"></div>
+                            </div>
+                            
+                            <!-- Description -->
+                            <p class="text-gray-600 leading-relaxed mb-6 line-clamp-3">
+                                <?= $habitat['description_habitat']; ?>
+                            </p>
+                            
+                            <!-- Boutons Modifier / Supprimer -->
+                            <div class="flex gap-3">
+                                <a href="actions/modifier_habitat.php?id=<?= $habitat['id']; ?>" 
+                                class="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 
+                                        text-white py-3 px-4 rounded-xl font-medium shadow-md shadow-blue-200
+                                        hover:shadow-lg hover:shadow-blue-300 hover:scale-105 transition-all duration-300">
+                                    <i class="fas fa-edit"></i>
+                                    <span>Modifier</span>
+                                </a>
+                                <a href="actions/supprimer_habitat.php?supprimer=<?= $habitat['id']; ?>" 
+                                onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet habitat ?');"
+                                class="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-red-500 to-red-600 
+                                        text-white py-3 px-4 rounded-xl font-medium shadow-md shadow-red-200
+                                        hover:shadow-lg hover:shadow-red-300 hover:scale-105 transition-all duration-300">
+                                    <i class="fas fa-trash"></i>
+                                    <span>Supprimer</span>
+                                </a>
+                            </div>
                         </div>
+                        
+                        <!-- Effet de brillance au survol -->
+                        <div class="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-transparent 
+                                    opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
                     </div>
                     <?php endforeach; ?>
                 </div>
             </div>
-            <!-- Modal: Add/Edit Animal -->
+            <!-- Modal: Add Animal -->
             <div id="addAnimalModal" class="modal">
                 <div class="modal-content bg-white rounded-3xl shadow-2xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
                     <div class="flex items-center justify-between mb-6">
@@ -366,10 +392,12 @@ $animaux = $connexion->query($requet_sql);
             <div id="habitatModalAdd" class="modal">
             <div class="modal-content bg-white p-8 rounded-2xl">
 
-                <h2 class="text-2xl font-bold mb-4">Ajouter un Habitat</h2>
+                <div class="flex justify-between">
+                    <h2 class="text-2xl font-bold mb-4">Ajouter un Habitat</h2>
                 <button onclick="closeModal('habitatModalAdd')" class="text-gray-500 text-xl">
                     <i class="fas fa-times"></i>
                 </button>
+                </div>
 
                 <form method="POST" action="actions/ajouter_habitat.php">
                     <label>Nom de l'habitat</label>

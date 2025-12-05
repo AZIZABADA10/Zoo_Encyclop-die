@@ -32,10 +32,10 @@ if (isset($_POST['modifier_habitat'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modifier un Habitat</title>
-
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/style/styles.css">
+    <link rel="shortcut icon" href="../assets/favicon.ico" type="image/x-icon">
 </head>
 
 <body class="bg-gray-100 min-h-screen flex flex-col">
@@ -44,7 +44,7 @@ if (isset($_POST['modifier_habitat'])) {
     <header class="bg-purple-500 text-white shadow-md">
         <div class="container mx-auto px-6 py-6 flex items-center justify-between">
             <h1 class="text-3xl font-bold flex items-center">
-                <i class="fas fa-tree text-4xl md:text-5xl float-animation mr-3"></i>
+                <i class="fas fa-paw text-3xl md:text-5xl float-animation"></i>
                 Gestion des Habitats
             </h1>
 
