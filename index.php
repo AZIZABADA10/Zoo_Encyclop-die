@@ -16,7 +16,7 @@ if(!empty($filter_par_type_alimentaire)){
     $requet_sql .= "AND a.type_alimentaire like '%$filter_par_type_alimentaire%'";
 };
 
-/** filter par habitats */
+/** filtrer par habitats */
 $filter_par_habitat = isset($_GET['filter_par_habitat']) ? $_GET['filter_par_habitat'] : '';
 if (!empty($_GET['filter_par_habitat'])) {
     $requet_sql .= "AND h.nom_habitat like '%$filter_par_habitat%'";
