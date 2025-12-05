@@ -39,23 +39,31 @@ $animaux = $connexion->query($requet_sql);
 <body class="bg-gradient-to-br from-purple-50 to-blue-50 min-h-screen">
     
     <!-- Header -->
-    <header class="gradient-bg text-white shadow-2xl">
-        <div class="container mx-auto px-4 py-6">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-4 slide-in">
-                    <i class="fas fa-paw text-5xl float-animation"></i>
-                    <div>
-                        <h1 class="text-4xl font-bold">Zoo Kids</h1>
-                        <p class="text-purple-200">Apprends et découvre les animaux !</p>
+        <header class="gradient-bg text-white shadow-2xl">
+            <div class="container mx-auto px-4 py-4 md:py-6">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-0">
+                    <!-- Logo et titre -->
+                    <div class="flex items-center space-x-3 md:space-x-4 slide-in w-full md:w-auto">
+                        <i class="fas fa-paw text-3xl md:text-5xl float-animation"></i>
+                        <div class="flex-1 md:flex-none">
+                            <h1 class="text-2xl md:text-4xl font-bold leading-tight">Zoo Kids</h1>
+                            <p class="text-purple-200 text-sm md:text-base">Apprends et découvre les animaux !</p>
+                        </div>
                     </div>
+
+                    <!-- Bouton responsive -->
+                    <button onclick="openModal('addAnimalModal')" 
+                            class="btn-primary bg-gradient-to-r from-yellow-400 to-amber-400 hover:from-yellow-500 hover:to-amber-500 
+                                text-purple-900 font-bold py-2 px-4 md:py-3 md:px-6 rounded-full shadow-lg hover:shadow-xl 
+                                transform hover:-translate-y-1 transition-all duration-300 w-full md:w-auto 
+                                flex items-center justify-center gap-2">
+                        <i class="fas fa-plus text-sm md:text-base"></i>
+                        <span class="text-sm md:text-base">Ajouter un Animal</span>
+                    </button>
                 </div>
-                <button onclick="openModal('addAnimalModal')" class="btn-primary bg-yellow-400 hover:bg-yellow-500 text-purple-900 font-bold py-3 px-6 rounded-full shadow-lg">
-                    <i class="fas fa-plus mr-2"></i>Ajouter un Animal
-                </button>
             </div>
-        </div>
-    </header>
-    
+        </header>
+            
 
         <!-- Statistics Section -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 m-4">
@@ -150,44 +158,69 @@ $animaux = $connexion->query($requet_sql);
         <div id="animalsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             <?php while ($animal = $animaux->fetch_assoc()): ?>
 
-            <div class="bg-white rounded-2xl shadow-xl overflow-hidden card-hover slide-in">
+            <div class="group bg-white rounded-3xl shadow-xl overflow-hidden relative 
+            hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
+    
+    <!-- Image avec effet de zoom et overlay -->
+    <div class="h-48 overflow-hidden relative">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent 
+                    opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
+        <img src="uploads/<?php echo $animal['image_animal']; ?>" 
+             class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-700">
+    </div>
 
-                <div class="h-48 flex items-center justify-center">
-                    <img src="uploads/<?php echo $animal['image_animal']; ?>" 
-                        class="h-full w-full object-cover">
-                </div>
+    <!-- Contenu avec animations -->
+    <div class="p-6 relative">
+        <!-- Nom avec effet underline -->
+        <h3 class="text-2xl font-bold text-gray-900 mb-3 relative inline-block 
+                   after:content-[''] after:absolute after:w-0 after:h-1 after:bg-gradient-to-r after:from-purple-500 after:to-blue-500 
+                   after:left-0 after:-bottom-1 after:transition-all after:duration-500 group-hover:after:w-full">
+            <?php echo $animal['nom']; ?>
+        </h3>
 
-                <div class="p-6">
+        <!-- Badges avec animation de scale -->
+        <div class="flex flex-wrap gap-2 mb-4">
+            <span class="inline-flex items-center gap-1 bg-gradient-to-r from-purple-50 to-white 
+                        text-purple-700 px-4 py-2 rounded-full text-sm font-semibold 
+                        border border-purple-200 shadow-sm hover:scale-105 transition-transform duration-300">
+                <i class="fas fa-utensils text-purple-600"></i>
+                <?php echo $animal['type_alimentaire']; ?>
+            </span>
+            
+            <span class="inline-flex items-center gap-1 bg-gradient-to-r from-emerald-50 to-white 
+                        text-emerald-700 px-4 py-2 rounded-full text-sm font-semibold 
+                        border border-emerald-200 shadow-sm hover:scale-105 transition-transform duration-300">
+                <i class="fas fa-tree text-emerald-600"></i>
+                <?php echo $animal['nom_habitat']; ?>
+            </span>
+        </div>
 
-                    <h3 class="text-2xl font-bold text-gray-800 mb-2">
-                        <?php echo $animal['nom']; ?>
-                    </h3>
+        <!-- Boutons avec animation glissante -->
+        <div class="flex gap-3 mt-6">
+            <button onclick="editAnimal(${animal.id}, '${animal.nom}', '${animal.type_alimentaire}', '${animal.habitat}', '${animal.image}')" 
+                    class="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-cyan-500 
+                           text-white font-medium py-3 rounded-xl hover:from-blue-600 hover:to-cyan-600 
+                           hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 
+                           group/btn">
+                <i class="fas fa-edit group-hover/btn:rotate-12 transition-transform duration-300"></i>
+                <span class="group-hover/btn:translate-x-1 transition-transform duration-300">Modifier</span>
+            </button>
+            
+            <button onclick="deleteAnimal(${animal.id}, '${animal.nom}')" 
+                    class="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-red-500 to-rose-500 
+                           text-white font-medium py-3 rounded-xl hover:from-red-600 hover:to-rose-600 
+                           hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 
+                           group/btn">
+                <i class="fas fa-trash group-hover/btn:rotate-12 transition-transform duration-300"></i>
+                <span class="group-hover/btn:translate-x-1 transition-transform duration-300">Supprimer</span>
+            </button>
+        </div>
+    </div>
 
-                    <div class="flex items-center gap-2 mb-2">
-                        <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-semibold">
-                            <i class="fas fa-utensils mr-1"></i>
-                            <?php echo $animal['type_alimentaire']; ?>
-                        </span>
-                    </div>
-
-                    <div class="flex items-center gap-2 mb-4">
-                        <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
-                            <i class="fas fa-tree mr-1"></i>
-                            <?php echo $animal['nom_habitat']; ?>
-                        </span>
-                    </div>
-                    <div class="flex gap-2">
-                            <button onclick="editAnimal(${animal.id}, '${animal.nom}', '${animal.type_alimentaire}', '${animal.habitat}', '${animal.image}')" 
-                                    class="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button onclick="deleteAnimal(${animal.id}, '${animal.nom}')" 
-                                    class="flex-1 bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg transition">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                </div>
-            </div>
+    <!-- Effet de bordure animé -->
+    <div class="absolute inset-0 rounded-3xl border-2 border-transparent 
+                group-hover:border-purple-200 transition-all duration-500 pointer-events-none"></div>
+</div>
 
             <?php endwhile; ?>
             </div>
