@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nom'],$_POST['habitat
     } 
 
     $requet_sql = "INSERT INTO animal (nom,type_alimentaire,image_animal,id_habitat) VALUES 
-    ('$nom','$type_alimentaire','$imageName',$habitat) "; 
+    ('$nom','$type_alimentaire','$imageName',$habitat)"; 
 
         $connexion ->query($requet_sql);
         header("Location: index.php");
