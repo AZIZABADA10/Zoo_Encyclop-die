@@ -12,7 +12,7 @@ $requet_sql = "SELECT a.*, h.nom_habitat
                ";
 
 /** filtrage par type alimentaire */
-$filter_par_type_alimentaire = isset($_GET['filter_par_type_alimentaire'])? $_GET['filter_par_type_alimentaire']:'';
+$filter_par_type_alimentaire = isset($_GET['filter_par_type_alimentaire'])? $_GET['filter_par_type_alimentaire'] : '';
 if(!empty($filter_par_type_alimentaire)){
     $requet_sql .= " AND a.type_alimentaire like '%$filter_par_type_alimentaire%'";
 };
@@ -109,7 +109,7 @@ $animaux = $connexion->query($requet_sql);
     <!-- Filters Section -->
     <div class="container mx-auto px-4 py-8 fade-in">
    <div class="bg-gradient-to-r from-white to-purple-50 rounded-3xl shadow-2xl p-6 mb-8 border border-purple-100">
-        <form method="get" class="flex flex-wrap gap-6 items-end">
+        <form method="GET" class="flex flex-wrap gap-6 items-end">
             <div class="flex-1 min-w-[250px]">
                 <label class="block text-gray-800 font-bold mb-3 text-lg">
                     <i class="fas fa-tree mr-2 text-emerald-600"></i>Habitat
@@ -124,7 +124,7 @@ $animaux = $connexion->query($requet_sql);
                             class="py-2 hover:bg-purple-100">Jungle</option>
                     <option value="Désert" <?= ($_GET['filter_par_habitat'] ?? '') == "Désert" ? "selected" : "" ?>
                             class="py-2 hover:bg-purple-100">Désert</option>
-                    <option value="Océan" <?= ($_get['filter_par_habitat'] ?? '') == "Ocean" ? "selected" : "" ?>
+                    <option value="Océan" <?= ($_GET['filter_par_habitat'] ?? '') == "Océan" ? "selected" : "" ?>
                             class="py-2 hover:bg-purple-100">Océan</option>
                 </select>
             </div>
