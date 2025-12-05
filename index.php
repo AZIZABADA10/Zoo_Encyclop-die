@@ -108,7 +108,7 @@ $animaux = $connexion->query($requet_sql);
 
     <!-- Filters Section -->
     <div class="container mx-auto px-4 py-8 fade-in">
-            <div class="bg-gradient-to-r from-white to-purple-50 rounded-3xl shadow-2xl p-6 mb-8 border border-purple-100">
+   <div class="bg-gradient-to-r from-white to-purple-50 rounded-3xl shadow-2xl p-6 mb-8 border border-purple-100">
         <form method="get" class="flex flex-wrap gap-6 items-end">
             <div class="flex-1 min-w-[250px]">
                 <label class="block text-gray-800 font-bold mb-3 text-lg">
@@ -204,7 +204,7 @@ $animaux = $connexion->query($requet_sql);
                            hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 
                            group/btn">
                 <i class="fas fa-edit group-hover/btn:rotate-12 transition-transform duration-300"></i>
-                <span class="group-hover/btn:translate-x-1 transition-transform duration-300">Modifier</span>
+                <span class="group-hover/btn:translate-x-1 transition-transform duration-300"><a href="actions/modifier_animal.php?id_a_modifier=<?= $animal['id']; ?>">Modifier</a></span>
             </button>
             
             <button
