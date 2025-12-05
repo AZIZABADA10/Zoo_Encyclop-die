@@ -53,7 +53,7 @@ Il permet de gérer les animaux, leurs habitats, leurs types alimentaires ainsi 
 | nom_habitat         | VARCHAR     | Nom de l’habitat       |
 | description_habitat | TEXT        | Description            |
 
-## 🐾 Table `animal`
+## Table `animal`
 | Champ             | Type        | Description                       |
 |------------------|-------------|-----------------------------------|
 | id               | INT (PK AI) | Identifiant animal                |
